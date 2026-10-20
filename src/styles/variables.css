@@ -1,0 +1,9 @@
+:root {
+  --color-ink: #fff8e8;
+  --color-gold: #f0c14a;
+  --color-gold-deep: #a86a00;
+  --color-navy: rgba(8, 18, 42, 0.78);
+  --color-disabled: #8d949e;
+  --font-body: "Trebuchet MS", "Segoe UI", sans-serif;
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}

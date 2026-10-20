@@ -1,0 +1,178 @@
+import { useEffect, useRef } from 'react'
+import { assets } from '../../data/assets'
+import { useCopy } from '../../utils/language'
+import Buzzy from '../buzzy/Buzzy'
+import CutoutImage from '../layout/CutoutImage'
+import QuestionPanel from '../question-panel/QuestionPanel'
+
+function resultMessage(score, total, text) {
+  if (score === total) return text.resultsPerfect
+  if (score >= 15) return text.resultsHigh
+  if (score >= 10) return text.resultsMid
+  return text.resultsLow
+}
+
+export default function QuizModal({
+  question,
+  subject,
+  selectedIndex,
+  confirmed = false,
+  answeredCount,
+  total,
+  showResults,
+  score,
+  onSelect,
+  onConfirm,
+  onContinue,
+  onBack,
+  onPlayAgain,
+}) {
+  const dialogRef = useRef(null)
+  const text = useCopy()
+  const open = showResults || Boolean(question)
+
+  useEffect(() => {
+    if (open) dialogRef.current?.focus()
+  }, [open, question, showResults])
+
+  useEffect(() => {
+    if (!question) return undefined
+    function onKeyDown(event) {
+      if (event.key !== 'Escape') return
+      if (confirmed) onContinue()
+      else onBack()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [question, confirmed, onContinue, onBack])
+
+  if (!open) return null
+
+  const correct = question ? selectedIndex === question.correctIndex : false
+
+  const buzzyMood = confirmed ? (correct ? 'win' : 'miss') : 'arrive'
+
+  return (
+    <div className="modal-backdrop">
+      {showResults ? null : <Buzzy mood={buzzyMood} variant="modal" />}
+      {showResults ? null : (
+        <div className="question-entrance" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      )}
+      {correct && confirmed ? (
+        <div className="fireworks" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      ) : null}
+      {(correct && confirmed) || (showResults && score >= 10) ? (
+        <div className="confetti" aria-hidden="true">
+          {['#ffe08a', '#7a3ff0', '#1d6fe8', '#ffd56a', '#f0c14a', '#9b6bff', '#7ec8ff', '#fff1b0', '#ff8ad4', '#8affc1', '#fff', '#ffb347'].map(
+            (color, index) => (
+              <span
+                key={`${color}-${index}`}
+                className={index % 3 === 0 ? 'is-star' : undefined}
+                style={{
+                  left: `${4 + (index % 12) * 8}%`,
+                  background: color,
+                  animationDelay: `${(index % 8) * 0.06}s`,
+                  animationDuration: `${3.2 + (index % 4) * 0.4}s`,
+                }}
+              />
+            ),
+          )}
+        </div>
+      ) : null}
+      <div
+        className={
+          showResults
+            ? 'modal-card is-results'
+            : confirmed
+              ? `modal-card is-question ${correct ? 'is-win' : 'is-miss'}`
+              : 'modal-card is-question'
+        }
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quiz-heading"
+        tabIndex={-1}
+        ref={dialogRef}
+      >
+        {showResults ? (
+          <div className="results">
+            <CutoutImage className="results-rewards" src={assets.rewards} mode="white" alt="" />
+            <p className="question-kicker">Spin & Conquer</p>
+            <h2 id="quiz-heading">{text.resultsTitle}</h2>
+            <p className="results-score">
+              <strong>{score}</strong>
+              <span>
+                {text.outOf} {total}
+              </span>
+            </p>
+            <p className="results-copy">{resultMessage(score, total, text)}</p>
+            <button type="button" className="spin-button results-again" onClick={onPlayAgain}>
+              <CutoutImage src={assets.playButton} mode="white" alt="" />
+              <span>{text.playAgain}</span>
+            </button>
+          </div>
+        ) : (
+          <>
+            {confirmed ? null : (
+              <button type="button" className="back-button" onClick={onBack}>
+                <span aria-hidden="true">←</span>
+                {text.back}
+              </button>
+            )}
+            <QuestionPanel
+              question={question}
+              subject={subject}
+              selectedIndex={selectedIndex}
+              confirmed={confirmed}
+              onSelect={onSelect}
+            />
+            {showResults ? null : (
+              <div className={confirmed && correct ? 'question-sparkles is-burst' : 'question-sparkles'} aria-hidden="true">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+            )}
+            {confirmed && (
+              <p className={correct ? 'cheer-banner is-win' : 'cheer-banner is-miss'}>
+                {correct ? text.cheerWin : text.cheerMiss}
+              </p>
+            )}
+            {confirmed && (
+              <p className={correct ? 'feedback is-correct' : 'feedback is-wrong'} role="status">
+                {correct ? text.correct : text.wrong(question.options[question.correctIndex])}
+              </p>
+            )}
+            {confirmed ? (
+              <button type="button" className="continue-button is-checked" onClick={onContinue}>
+                {answeredCount >= total ? text.seeResults : text.continue}
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="continue-button"
+                onClick={onConfirm}
+                disabled={selectedIndex === null}
+              >
+                {text.confirm}
+              </button>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
