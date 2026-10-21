@@ -1,6 +1,5 @@
 import { assets } from './data/assets'
 import Buzzy from './components/buzzy/Buzzy'
-import CutoutImage from './components/layout/CutoutImage'
 import Layout from './components/layout/Layout'
 import LanguageToggle from './components/language-toggle/LanguageToggle'
 import Navbar from './components/navbar/Navbar'
@@ -10,6 +9,14 @@ import SoundToggle from './components/sound-toggle/SoundToggle'
 import SpinWheel from './components/spin-wheel/SpinWheel'
 import { useGame } from './hooks/useGame'
 import { useCopy } from './utils/language'
+
+const skyPops = [
+  ['16%', '14%', '0s', '#ffe08a'],
+  ['22%', '78%', '0.45s', '#7ec8ff'],
+  ['10%', '46%', '0.9s', '#ff8ad4'],
+  ['28%', '30%', '1.3s', '#b794f6'],
+  ['18%', '62%', '0.7s', '#8affc1'],
+]
 
 export default function App() {
   const game = useGame()
@@ -54,6 +61,15 @@ export default function App() {
           <span />
         </div>
       ) : null}
+      {game.spinning ? (
+        <div className="sky-pop" aria-hidden="true">
+          {skyPops.map(([top, left, delay, color]) => (
+            <i key={`${top}-${left}`} style={{ top, left, animationDelay: delay, color }}>
+              <span /><span /><span /><span /><span /><span />
+            </i>
+          ))}
+        </div>
+      ) : null}
       {game.phase === 'question' || game.showResults ? null : (
         <Buzzy mood={game.spinning ? 'spin' : 'idle'} />
       )}
@@ -64,7 +80,6 @@ export default function App() {
         </button>
       ) : null}
       <main className="playfield">
-        <CutoutImage className="arena" src={assets.arena} mode="white" alt="" />
         <SpinWheel
           rotation={game.rotation}
           spinDuration={game.spinDuration}

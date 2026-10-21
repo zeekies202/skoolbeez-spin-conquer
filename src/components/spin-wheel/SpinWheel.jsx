@@ -19,6 +19,8 @@ const partyBits = [
   ['#fff6c8', '7%', '0.16s'],
 ]
 
+const hexes = Array.from({ length: 10 }, (_, index) => index)
+
 const bursts = Array.from({ length: 10 }, (_, index) => {
   const angle = (index / 10) * Math.PI * 2 - Math.PI / 2
   return {
@@ -159,6 +161,11 @@ export default function SpinWheel({
             <div className="wheel-comet" aria-hidden="true">
               <span />
             </div>
+            <div className="hex-pop" aria-hidden="true">
+              {hexes.map((hex) => (
+                <span key={hex} style={{ '--i': hex }} />
+              ))}
+            </div>
           </>
         ) : null}
         {spinning || questionSpinning ? (
@@ -182,6 +189,13 @@ export default function SpinWheel({
             {partyBits.map(([color, edge, delay]) => (
               <span key={`r-${edge}`} className="is-right" style={{ right: edge, background: color, animationDelay: delay }} />
             ))}
+          </div>
+        ) : null}
+        {impact ? (
+          <div className="finale-pop" aria-hidden="true">
+            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
+            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
+            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
           </div>
         ) : null}
         {impact ? (

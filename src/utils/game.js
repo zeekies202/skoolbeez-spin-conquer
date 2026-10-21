@@ -7,7 +7,7 @@ function mod(value) {
   return ((value % 360) + 360) % 360
 }
 
-const numberCenters = [0, 90, 180, 270]
+const numberCenters = [315, 45, 225, 135]
 
 export function questionSegmentAngle(index, count) {
   if (count === 4 && numberCenters[index] != null) return numberCenters[index]

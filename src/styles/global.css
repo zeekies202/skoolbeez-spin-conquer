@@ -79,22 +79,9 @@ img {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 1fr minmax(0, 33%) 1fr;
+  grid-template-columns: 1fr minmax(0, 50%) 1fr;
   align-items: end;
   justify-items: center;
-}
-
-.arena {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  bottom: 8cqh;
-  width: 52%;
-  height: auto;
-  transform: translateX(-50%);
-  object-fit: contain;
-  pointer-events: none;
-  filter: drop-shadow(0 1.2cqw 0.6cqw rgba(0, 0, 0, 0.28));
 }
 
 .wheel-column {
@@ -102,7 +89,7 @@ img {
   position: relative;
   z-index: 3;
   width: 100%;
-  margin-bottom: 0.4cqh;
+  margin-bottom: 8.5cqh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,18 +101,18 @@ img {
 .wheel-stage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 1324 / 1188;
 }
 
 .subject-rotor {
   position: absolute;
   z-index: 1;
-  left: 24.25%;
-  top: 13.53%;
-  width: 51.07%;
+  left: 29.92%;
+  top: 30.23%;
+  width: 39.67%;
   aspect-ratio: 1;
   transform: rotate(var(--wheel-rotation, 0deg));
-  transform-origin: 49.94% 49.19%;
+  transform-origin: 50.2% 49.59%;
   transition: transform var(--spin-duration, 6s) cubic-bezier(0.08, 0.72, 0.02, 1);
   pointer-events: none;
 }
@@ -135,7 +122,7 @@ img {
   width: 100%;
   height: 100%;
   max-width: none;
-  object-fit: fill;
+  object-fit: contain;
 }
 
 .wheel-stand {
@@ -144,7 +131,7 @@ img {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: contain;
   pointer-events: none;
 }
 
@@ -165,10 +152,13 @@ img {
 }
 
 .wheel-column > .spin-button {
-  position: relative;
+  position: absolute;
   z-index: 6;
-  width: 72%;
-  margin-top: -6.2cqh;
+  left: 50%;
+  bottom: 2.2cqh;
+  width: 46%;
+  margin-top: 0;
+  transform: translateX(-50%);
   flex: 0 0 auto;
   pointer-events: auto;
 }
@@ -188,6 +178,10 @@ img {
   height: 100%;
   max-width: none;
   object-fit: contain;
+}
+
+.wheel-column > .spin-button span {
+  font-size: 1.85cqw;
 }
 
 .spin-button span {
@@ -212,32 +206,29 @@ img {
 .question-rotor {
   position: absolute;
   z-index: 2;
-  left: 24.25%;
-  top: 13.53%;
-  width: 51.07%;
+  left: 29.82%;
+  top: 30.03%;
+  width: 40.36%;
   aspect-ratio: 1;
-  border-radius: 50%;
   overflow: hidden;
-  clip-path: circle(50% at 50% 50%);
   pointer-events: none;
-  background: #120c08;
+  background: transparent;
 }
 
 .question-spin {
   position: absolute;
   inset: 0;
   transform: rotate(var(--question-turn, 0deg));
-  transform-origin: 50% 50%;
+  transform-origin: 49.71% 49.18%;
 }
 
 .question-numbers {
   position: absolute;
-  left: -7.78%;
-  top: -6.52%;
-  width: 116.54%;
-  height: 116.54%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   max-width: none;
-  object-fit: fill;
+  object-fit: contain;
   pointer-events: none;
   user-select: none;
 }
@@ -247,27 +238,27 @@ img {
 }
 
 .question-numbers[data-number='1'] {
-  clip-path: polygon(22.15% 21.08%, 25.97% 17.74%, 30.19% 14.92%, 34.74% 12.67%, 39.55% 11.04%, 44.53% 10.05%, 49.59% 9.72%, 54.65% 10.05%, 59.63% 11.04%, 64.44% 12.67%, 68.99% 14.92%, 73.21% 17.74%, 77.03% 21.08%, 59.91% 38.20%, 58.48% 36.94%, 56.89% 35.88%, 55.18% 35.03%, 53.37% 34.42%, 51.50% 34.04%, 49.59% 33.92%, 47.68% 34.04%, 45.81% 34.42%, 44.00% 35.03%, 42.29% 35.88%, 40.70% 36.94%, 39.27% 38.20%);
+  clip-path: polygon(9.43% 44.95%, 11.01% 37.24%, 14.05% 29.99%, 18.43% 23.46%, 23.99% 17.90%, 30.52% 13.52%, 37.77% 10.48%, 45.48% 8.90%, 48.09% 33.76%, 45.14% 34.37%, 42.37% 35.53%, 39.87% 37.21%, 37.74% 39.34%, 36.06% 41.84%, 34.90% 44.61%, 34.29% 47.56%);
 }
 
 .question-numbers[data-number='2'] {
-  clip-path: polygon(77.03% 21.08%, 80.37% 24.90%, 83.19% 29.12%, 85.44% 33.67%, 87.07% 38.48%, 88.06% 43.46%, 88.39% 48.52%, 88.06% 53.58%, 87.07% 58.56%, 85.44% 63.37%, 83.19% 67.92%, 80.37% 72.14%, 77.03% 75.96%, 59.91% 58.84%, 61.17% 57.41%, 62.23% 55.82%, 63.08% 54.11%, 63.69% 52.30%, 64.07% 50.43%, 64.19% 48.52%, 64.07% 46.61%, 63.69% 44.74%, 63.08% 42.93%, 62.23% 41.22%, 61.17% 39.63%, 59.91% 38.20%);
+  clip-path: polygon(53.94% 8.90%, 61.65% 10.48%, 68.90% 13.52%, 75.43% 17.90%, 80.99% 23.46%, 85.37% 29.99%, 88.41% 37.24%, 89.99% 44.95%, 65.13% 47.56%, 64.52% 44.61%, 63.36% 41.84%, 61.68% 39.34%, 59.55% 37.21%, 57.05% 35.53%, 54.28% 34.37%, 51.33% 33.76%);
 }
 
 .question-numbers[data-number='3'] {
-  clip-path: polygon(77.03% 75.96%, 73.21% 79.30%, 68.99% 82.12%, 64.44% 84.37%, 59.63% 86.00%, 54.65% 86.99%, 49.59% 87.32%, 44.53% 86.99%, 39.55% 86.00%, 34.74% 84.37%, 30.19% 82.12%, 25.97% 79.30%, 22.15% 75.96%, 39.27% 58.84%, 40.70% 60.10%, 42.29% 61.16%, 44.00% 62.01%, 45.81% 62.62%, 47.68% 63.00%, 49.59% 63.12%, 51.50% 63.00%, 53.37% 62.62%, 55.18% 62.01%, 56.89% 61.16%, 58.48% 60.10%, 59.91% 58.84%);
+  clip-path: polygon(45.48% 89.46%, 37.77% 87.88%, 30.52% 84.84%, 23.99% 80.46%, 18.43% 74.90%, 14.05% 68.37%, 11.01% 61.12%, 9.43% 53.41%, 34.29% 50.80%, 34.90% 53.75%, 36.06% 56.52%, 37.74% 59.02%, 39.87% 61.15%, 42.37% 62.83%, 45.14% 63.99%, 48.09% 64.60%);
 }
 
 .question-numbers[data-number='4'] {
-  clip-path: polygon(22.15% 75.96%, 18.81% 72.14%, 15.99% 67.92%, 13.74% 63.37%, 12.11% 58.56%, 11.12% 53.58%, 10.79% 48.52%, 11.12% 43.46%, 12.11% 38.48%, 13.74% 33.67%, 15.99% 29.12%, 18.81% 24.90%, 22.15% 21.08%, 39.27% 38.20%, 38.01% 39.63%, 36.95% 41.22%, 36.10% 42.93%, 35.49% 44.74%, 35.11% 46.61%, 34.99% 48.52%, 35.11% 50.43%, 35.49% 52.30%, 36.10% 54.11%, 36.95% 55.82%, 38.01% 57.41%, 39.27% 58.84%);
+  clip-path: polygon(89.99% 53.41%, 88.41% 61.12%, 85.37% 68.37%, 80.99% 74.90%, 75.43% 80.46%, 68.90% 84.84%, 61.65% 87.88%, 53.94% 89.46%, 51.33% 64.60%, 54.28% 63.99%, 57.05% 62.83%, 59.55% 61.15%, 61.68% 59.02%, 63.36% 56.52%, 64.52% 53.75%, 65.13% 50.80%);
 }
 
 .wheel-column > .spin-button:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateX(-50%) translateY(-2px) scale(1.03);
 }
 
 .wheel-column > .spin-button:active:not(:disabled) {
-  transform: translateY(3px) scale(0.94);
+  transform: translateX(-50%) translateY(3px) scale(0.94);
 }
 
 .results-again:hover:not(:disabled) {
