@@ -1257,17 +1257,7 @@
 }
 
 .modal-backdrop::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: min(760px, 88vw);
-  height: min(760px, 88vw);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 214, 120, 0.2), rgba(110, 60, 190, 0.08) 38%, transparent 70%);
-  filter: blur(6px);
-  pointer-events: none;
+  content: none;
 }
 
 .modal-card.is-question.is-win {
