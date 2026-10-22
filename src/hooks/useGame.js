@@ -21,6 +21,7 @@ export function useGame() {
   const [spinning, setSpinning] = useState(false)
   const [activeQuestion, setActiveQuestion] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
+  const [wrongIndexes, setWrongIndexes] = useState([])
   const [confirmed, setConfirmed] = useState(false)
   const [showResults, setShowResults] = useState(false)
   const [revealSubject, setRevealSubject] = useState(null)
@@ -147,6 +148,7 @@ export function useGame() {
       return
     }
     setSelectedIndex(null)
+    setWrongIndexes([])
     setConfirmed(false)
     setActiveQuestion(withShuffledOptions(question))
     setPhase('question')
@@ -172,12 +174,13 @@ export function useGame() {
   }
 
   function selectAnswer(index) {
-    if (!activeQuestion || confirmed) return
+    if (!activeQuestion || confirmed || wrongIndexes.includes(index)) return
     setSelectedIndex(index)
-  }
-
-  function confirmAnswer() {
-    if (!activeQuestion || confirmed || selectedIndex === null) return
+    if (index !== activeQuestion.correctIndex) {
+      setWrongIndexes((current) => (current.includes(index) ? current : [...current, index]))
+      playWrong()
+      return
+    }
     setConfirmed(true)
     setAnsweredIds((current) => {
       if (current.includes(activeQuestion.id)) return current
@@ -185,16 +188,12 @@ export function useGame() {
       answeredRef.current = next
       return next
     })
-    if (selectedIndex === activeQuestion.correctIndex) {
-      setScore((current) => {
-        const next = current + 1
-        scoreRef.current = next
-        return next
-      })
-      playCorrect()
-    } else {
-      playWrong()
-    }
+    setScore((current) => {
+      const next = current + 1
+      scoreRef.current = next
+      return next
+    })
+    playCorrect()
     window.clearTimeout(returnTimer.current)
     returnTimer.current = window.setTimeout(
       returnToSubjectWheel,
@@ -207,6 +206,7 @@ export function useGame() {
     const finished = answeredRef.current.length >= TOTAL_QUESTIONS
     setActiveQuestion(null)
     setSelectedIndex(null)
+    setWrongIndexes([])
     setConfirmed(false)
     if (finished) {
       const finalScore = scoreRef.current
@@ -234,6 +234,7 @@ export function useGame() {
     pendingQuestion.current = null
     setActiveQuestion(null)
     setSelectedIndex(null)
+    setWrongIndexes([])
     setConfirmed(false)
     setPhase('subject')
   }
@@ -266,6 +267,7 @@ export function useGame() {
     setSpinning(false)
     setActiveQuestion(null)
     setSelectedIndex(null)
+    setWrongIndexes([])
     setConfirmed(false)
     setNotice('')
     setShowResults(false)
@@ -306,6 +308,7 @@ export function useGame() {
     activeQuestion,
     activeSubject,
     selectedIndex,
+    wrongIndexes,
     confirmed,
     showResults,
     spin,
@@ -313,7 +316,6 @@ export function useGame() {
     finishSpin,
     finishQuestionSpin,
     selectAnswer,
-    confirmAnswer,
     continueGame,
     backFromQuestion,
     backToSubjects,

@@ -6,10 +6,6 @@ import { isSubjectComplete } from '../../utils/game'
 import { useWheelDisc, useWheelStand } from '../../hooks/useWheelStand'
 import CutoutImage from '../layout/CutoutImage'
 
-const lights = Array.from({ length: 12 }, (_, index) => index)
-const twinkles = Array.from({ length: 8 }, (_, index) => index)
-const embers = Array.from({ length: 7 }, (_, index) => index)
-
 const partyBits = [
   ['#ffe08a', '6%', '0s'],
   ['#7ec8ff', '11%', '0.06s'],
@@ -18,18 +14,6 @@ const partyBits = [
   ['#8affc1', '13%', '0.1s'],
   ['#fff6c8', '7%', '0.16s'],
 ]
-
-const hexes = Array.from({ length: 10 }, (_, index) => index)
-
-const bursts = Array.from({ length: 10 }, (_, index) => {
-  const angle = (index / 10) * Math.PI * 2 - Math.PI / 2
-  return {
-    top: `${39.1 + Math.sin(angle) * 27}%`,
-    left: `${49.8 + Math.cos(angle) * 27}%`,
-    x: `${(Math.cos(angle) * 72).toFixed(1)}px`,
-    y: `${(Math.sin(angle) * 72).toFixed(1)}px`,
-  }
-})
 
 function QuestionDisc({
   questionSpinning,
@@ -111,6 +95,7 @@ export default function SpinWheel({
 
   const stageClass = [
     'wheel-stage',
+    showQuestions ? 'is-questions' : '',
     spinning || questionSpinning ? 'is-live' : '',
     impact ? 'is-hit' : '',
   ]
@@ -150,37 +135,15 @@ export default function SpinWheel({
             onQuestionSpinEnd={onQuestionSpinEnd}
           />
         ) : null}
-        {standUrl ? <img className="wheel-stand" src={standUrl} alt="" draggable="false" /> : null}
-        {spinning || questionSpinning ? (
-          <>
-            <div className="wheel-embers" aria-hidden="true">
-              {embers.map((ember) => (
-                <span key={ember} style={{ '--i': ember }} />
-              ))}
-            </div>
-            <div className="wheel-comet" aria-hidden="true">
-              <span />
-            </div>
-            <div className="hex-pop" aria-hidden="true">
-              {hexes.map((hex) => (
-                <span key={hex} style={{ '--i': hex }} />
-              ))}
-            </div>
-          </>
+        {standUrl ? (
+          <img className="wheel-stand is-subject" src={standUrl} alt="" draggable="false" />
         ) : null}
-        {spinning || questionSpinning ? (
-          <div className="wheel-orbit" aria-hidden="true">
-            {lights.map((light) => (
-              <span key={light} style={{ '--i': light }} />
-            ))}
-          </div>
-        ) : (
-          <div className="wheel-twinkle" aria-hidden="true">
-            {twinkles.map((light) => (
-              <span key={light} style={{ '--i': light }} />
-            ))}
-          </div>
-        )}
+        <img
+          className="wheel-stand is-question"
+          src={assets.questionStand}
+          alt=""
+          draggable="false"
+        />
         {impact ? (
           <div className="party-cannon" aria-hidden="true">
             {partyBits.map(([color, edge, delay]) => (
@@ -192,34 +155,12 @@ export default function SpinWheel({
           </div>
         ) : null}
         {impact ? (
-          <div className="finale-pop" aria-hidden="true">
-            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
-            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
-            <i><span /><span /><span /><span /><span /><span /><span /><span /></i>
-          </div>
-        ) : null}
-        {impact ? (
           <div className="star-fountain" aria-hidden="true">
             <span />
             <span />
             <span />
             <span />
             <span />
-          </div>
-        ) : null}
-        {impact ? (
-          <div className="wheel-impact" aria-hidden="true">
-            {bursts.map((spark) => (
-              <span
-                key={`${spark.left}-${spark.top}`}
-                style={{
-                  top: spark.top,
-                  left: spark.left,
-                  '--burst-x': spark.x,
-                  '--burst-y': spark.y,
-                }}
-              />
-            ))}
           </div>
         ) : null}
       </div>

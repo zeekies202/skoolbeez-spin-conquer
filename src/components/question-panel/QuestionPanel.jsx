@@ -4,6 +4,7 @@ export default function QuestionPanel({
   question,
   subject,
   selectedIndex,
+  wrongIndexes = [],
   confirmed = false,
   onSelect,
 }) {
@@ -17,17 +18,10 @@ export default function QuestionPanel({
       <h2 id="quiz-heading">{question.question}</h2>
       <div className="options" role="group" aria-label={text.answerOptions}>
         {question.options.map((option, index) => {
-          const isCorrect = index === question.correctIndex
+          const isCorrect = confirmed && index === question.correctIndex
+          const isWrong = wrongIndexes.includes(index)
           const isSelected = index === selectedIndex
-          const state = confirmed
-            ? isCorrect
-              ? 'is-correct'
-              : isSelected
-                ? 'is-wrong'
-                : ''
-            : isSelected
-              ? 'is-picked'
-              : ''
+          const state = isCorrect ? 'is-correct' : isWrong ? 'is-wrong' : ''
 
           return (
             <button
@@ -35,7 +29,7 @@ export default function QuestionPanel({
               type="button"
               className={`option ${state}`.trim()}
               onClick={() => onSelect(index)}
-              disabled={confirmed}
+              disabled={confirmed || isWrong}
               aria-pressed={isSelected}
             >
               <span className="option-letter">{String.fromCharCode(65 + index)}</span>

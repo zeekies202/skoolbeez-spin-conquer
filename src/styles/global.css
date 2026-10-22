@@ -113,8 +113,15 @@ img {
   aspect-ratio: 1;
   transform: rotate(var(--wheel-rotation, 0deg));
   transform-origin: 50.2% 49.59%;
-  transition: transform var(--spin-duration, 6s) cubic-bezier(0.08, 0.72, 0.02, 1);
+  opacity: 1;
+  transition:
+    transform var(--spin-duration, 6s) cubic-bezier(0.08, 0.72, 0.02, 1),
+    opacity 0.35s ease;
   pointer-events: none;
+}
+
+.wheel-stage.is-questions .subject-rotor {
+  opacity: 0;
 }
 
 .subject-rotor img {
@@ -133,6 +140,19 @@ img {
   height: 100%;
   object-fit: contain;
   pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.wheel-stand.is-question {
+  opacity: 0;
+}
+
+.wheel-stage.is-questions .wheel-stand.is-subject {
+  opacity: 0;
+}
+
+.wheel-stage.is-questions .wheel-stand.is-question {
+  opacity: 1;
 }
 
 .segment-spent {
@@ -206,9 +226,9 @@ img {
 .question-rotor {
   position: absolute;
   z-index: 2;
-  left: 29.82%;
-  top: 30.03%;
-  width: 40.36%;
+  left: 29.73%;
+  top: 31.00%;
+  width: 40.15%;
   aspect-ratio: 1;
   overflow: hidden;
   pointer-events: none;
@@ -219,7 +239,7 @@ img {
   position: absolute;
   inset: 0;
   transform: rotate(var(--question-turn, 0deg));
-  transform-origin: 49.71% 49.18%;
+  transform-origin: 49.75% 49.30%;
 }
 
 .question-numbers {
@@ -494,6 +514,7 @@ img {
   background: linear-gradient(180deg, #c43838, #8d1d1d);
   border-color: #ffd0d0;
   animation: answer-shake 0.42s ease;
+  cursor: default;
 }
 
 .option:disabled:not(.is-correct):not(.is-wrong) {

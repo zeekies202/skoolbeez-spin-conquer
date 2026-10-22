@@ -8,13 +8,6 @@ export default function Buzzy({ mood = 'idle', variant = 'stage' }) {
         <CutoutImage src={assets.mascot} mode="white" alt="" />
         <span className="buzzy-lid" />
       </div>
-      {variant === 'stage' ? (
-        <div className="buzzy-orbs" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-      ) : null}
       {variant === 'stage' && mood === 'spin' ? (
         <div className="buzzy-trail" aria-hidden="true">
           <span />

@@ -10,14 +10,6 @@ import SpinWheel from './components/spin-wheel/SpinWheel'
 import { useGame } from './hooks/useGame'
 import { useCopy } from './utils/language'
 
-const skyPops = [
-  ['16%', '14%', '0s', '#ffe08a'],
-  ['22%', '78%', '0.45s', '#7ec8ff'],
-  ['10%', '46%', '0.9s', '#ff8ad4'],
-  ['28%', '30%', '1.3s', '#b794f6'],
-  ['18%', '62%', '0.7s', '#8affc1'],
-]
-
 export default function App() {
   const game = useGame()
   const text = useCopy()
@@ -42,32 +34,10 @@ export default function App() {
         </svg>
         {text.reset}
       </button>
-      <div className="ambient-sparkles" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span />
-        <span className="is-star" />
-        <span className="is-star" />
-        <span className="is-star" />
-        <span className="is-star" />
-      </div>
       {game.spinning ? (
         <div className="stage-spots" aria-hidden="true">
           <span />
           <span />
-        </div>
-      ) : null}
-      {game.spinning ? (
-        <div className="sky-pop" aria-hidden="true">
-          {skyPops.map(([top, left, delay, color]) => (
-            <i key={`${top}-${left}`} style={{ top, left, animationDelay: delay, color }}>
-              <span /><span /><span /><span /><span /><span />
-            </i>
-          ))}
         </div>
       ) : null}
       {game.phase === 'question' || game.showResults ? null : (
@@ -105,13 +75,13 @@ export default function App() {
         question={game.activeQuestion}
         subject={game.activeSubject}
         selectedIndex={game.selectedIndex}
+        wrongIndexes={game.wrongIndexes}
         confirmed={game.confirmed}
         answeredCount={game.answeredIds.length}
         total={game.total}
         showResults={game.showResults}
         score={game.score}
         onSelect={game.selectAnswer}
-        onConfirm={game.confirmAnswer}
         onContinue={game.continueGame}
         onBack={game.backFromQuestion}
         onPlayAgain={game.requestNewGame}

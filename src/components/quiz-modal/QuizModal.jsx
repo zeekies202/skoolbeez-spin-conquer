@@ -16,13 +16,13 @@ export default function QuizModal({
   question,
   subject,
   selectedIndex,
+  wrongIndexes = [],
   confirmed = false,
   answeredCount,
   total,
   showResults,
   score,
   onSelect,
-  onConfirm,
   onContinue,
   onBack,
   onPlayAgain,
@@ -50,7 +50,7 @@ export default function QuizModal({
 
   const correct = question ? selectedIndex === question.correctIndex : false
 
-  const buzzyMood = confirmed ? (correct ? 'win' : 'miss') : 'arrive'
+  const buzzyMood = confirmed ? 'win' : wrongIndexes.length ? 'miss' : 'arrive'
 
   return (
     <div className="modal-backdrop">
@@ -65,14 +65,6 @@ export default function QuizModal({
           <span />
         </div>
       )}
-      {correct && confirmed ? (
-        <div className="fireworks" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
-      ) : null}
       {(correct && confirmed) || (showResults && score >= 10) ? (
         <div className="confetti" aria-hidden="true">
           {['#ffe08a', '#7a3ff0', '#1d6fe8', '#ffd56a', '#f0c14a', '#9b6bff', '#7ec8ff', '#fff1b0', '#ff8ad4', '#8affc1', '#fff', '#ffb347'].map(
@@ -134,42 +126,25 @@ export default function QuizModal({
               question={question}
               subject={subject}
               selectedIndex={selectedIndex}
+              wrongIndexes={wrongIndexes}
               confirmed={confirmed}
               onSelect={onSelect}
             />
-            {showResults ? null : (
-              <div className={confirmed && correct ? 'question-sparkles is-burst' : 'question-sparkles'} aria-hidden="true">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
-            )}
             {confirmed && (
-              <p className={correct ? 'cheer-banner is-win' : 'cheer-banner is-miss'}>
-                {correct ? text.cheerWin : text.cheerMiss}
+              <p className="cheer-banner is-win">
+                {text.cheerWin}
               </p>
             )}
             {confirmed && (
-              <p className={correct ? 'feedback is-correct' : 'feedback is-wrong'} role="status">
-                {correct ? text.correct : text.wrong(question.options[question.correctIndex])}
+              <p className="feedback is-correct" role="status">
+                {text.correct}
               </p>
             )}
             {confirmed ? (
               <button type="button" className="continue-button is-checked" onClick={onContinue}>
                 {answeredCount >= total ? text.seeResults : text.continue}
               </button>
-            ) : (
-              <button
-                type="button"
-                className="continue-button"
-                onClick={onConfirm}
-                disabled={selectedIndex === null}
-              >
-                {text.confirm}
-              </button>
-            )}
+            ) : null}
           </>
         )}
       </div>
