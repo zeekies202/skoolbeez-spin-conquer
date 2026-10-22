@@ -176,7 +176,7 @@ export const questions = [
     id: 'matematik-4',
     subjectId: 'matematik',
     question: 'Sebuah kek dipotong kepada 8 bahagian sama besar. Amir makan 3 bahagian. Berapakah pecahan kek yang dimakan Amir?',
-    options: ['3/8', '5/8', '3/5', '8/3'],
+    options: ['3/8', '5/8', '3/5', '1/4'],
     correctIndex: 0,
   },
 ]

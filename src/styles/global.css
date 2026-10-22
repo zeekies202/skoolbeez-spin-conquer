@@ -511,6 +511,51 @@ img {
   font-weight: 900;
 }
 
+.option.has-fraction {
+  min-height: 4.6rem;
+}
+
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  min-width: 1.7em;
+  margin-inline: 0.12em;
+  line-height: 1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.fraction-num,
+.fraction-den {
+  display: block;
+  padding: 0 0.32em;
+  text-align: center;
+}
+
+.fraction-bar {
+  display: block;
+  align-self: stretch;
+  width: 100%;
+  height: 2px;
+  margin: 0.14em 0;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+@media (max-width: 520px) {
+  .option.has-fraction {
+    min-height: 4.2rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .fraction {
+    font-size: 0.95em;
+  }
+}
+
 .option.is-correct {
   background: linear-gradient(180deg, #1f9d4a, #0d6b30);
   border-color: #ffe08a;
