@@ -53,7 +53,7 @@ export default function QuizModal({
   const buzzyMood = confirmed ? 'win' : wrongIndexes.length ? 'miss' : 'arrive'
 
   return (
-    <div className="modal-backdrop">
+    <div className={showResults ? 'modal-backdrop' : 'modal-backdrop is-question-open'}>
       {showResults ? null : <Buzzy mood={buzzyMood} variant="modal" />}
       {showResults ? null : (
         <div className="question-entrance" aria-hidden="true">

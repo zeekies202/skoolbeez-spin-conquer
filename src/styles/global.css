@@ -412,16 +412,24 @@ img {
   display: grid;
   place-items: center;
   padding: 1rem;
-  background: rgba(6, 14, 32, 0.22);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  background: rgba(4, 8, 20, 0.72);
+}
+
+.modal-backdrop.is-question-open {
+  background: rgba(4, 8, 20, 0.62);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .modal-card {
   position: relative;
+  z-index: 2;
+  isolation: isolate;
   width: min(680px, 100%);
   max-height: min(88dvh, 820px);
   overflow: auto;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   padding: 1.2rem 1.2rem 1.3rem;
   background: linear-gradient(180deg, rgba(14, 22, 48, 0.96), rgba(32, 16, 48, 0.96));
   border: 3px solid var(--color-gold);
