@@ -241,8 +241,12 @@
     transform: scale(1);
   }
 
-  28% {
-    transform: scale(1.045);
+  18% {
+    transform: scale(1.07);
+  }
+
+  46% {
+    transform: scale(0.985);
   }
 
   100% {
@@ -250,13 +254,14 @@
   }
 }
 
-@keyframes flash-out {
-  from {
-    opacity: 0.85;
+@keyframes stand-flash {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255, 210, 80, 0.35));
   }
 
-  to {
-    opacity: 0;
+  30% {
+    filter: drop-shadow(0 0 28px rgba(255, 236, 160, 0.95)) brightness(1.35);
   }
 }
 
@@ -429,18 +434,23 @@
 }
 
 .wheel-stage.is-hit {
-  animation: stage-thump 0.42s ease;
+  animation: stage-thump 0.55s ease;
 }
 
-.wheel-stage.is-hit::after {
+.wheel-stage.is-hit .wheel-stand {
+  animation: stand-flash 0.55s ease;
+}
+
+.wheel-stage.is-live::before {
   content: "";
   position: absolute;
-  z-index: 4;
-  inset: 8% 18% 28%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 246, 210, 0.55), transparent 68%);
+  z-index: 5;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 248, 214, 0.55) 50%, transparent 62%);
+  transform: translateX(-130%);
+  animation: card-gleam 1.5s ease-in-out infinite;
+  mix-blend-mode: screen;
   pointer-events: none;
-  animation: flash-out 0.45s ease forwards;
 }
 
 .question-spin.is-enter {
@@ -1250,17 +1260,14 @@
   content: "";
   position: absolute;
   left: 50%;
-  top: 48%;
-  width: 78vmin;
-  height: 78vmin;
+  top: 46%;
+  width: min(760px, 88vw);
+  height: min(760px, 88vw);
   transform: translate(-50%, -50%);
-  background: repeating-conic-gradient(
-    from 0deg,
-    rgba(255, 220, 120, 0.16) 0 8deg,
-    transparent 8deg 24deg
-  );
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 214, 120, 0.2), rgba(110, 60, 190, 0.08) 38%, transparent 70%);
+  filter: blur(6px);
   pointer-events: none;
-  animation: sheen-spin 14s linear infinite;
 }
 
 .modal-card.is-question.is-win {
@@ -1317,7 +1324,7 @@
 
   100% {
     opacity: 0;
-    transform: translate(36px, -260px) rotate(150deg);
+    transform: translate(70px, -420px) rotate(180deg);
   }
 }
 
@@ -1329,7 +1336,7 @@
 
   100% {
     opacity: 0;
-    transform: translate(-36px, -260px) rotate(-150deg);
+    transform: translate(-70px, -420px) rotate(-180deg);
   }
 }
 
@@ -1357,7 +1364,7 @@
 
   100% {
     opacity: 0;
-    transform: translateY(-110px) scale(1.2) rotate(40deg);
+    transform: translateY(-190px) scale(1.45) rotate(50deg);
   }
 }
 
@@ -1450,19 +1457,23 @@
 .star-fountain span {
   position: absolute;
   bottom: 0;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   background: #fff4c2;
   clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  filter: drop-shadow(0 0 6px #ffd056);
-  animation: star-rise 0.9s ease-out forwards;
+  filter: drop-shadow(0 0 8px #ffd056);
+  animation: star-rise 1.05s ease-out forwards;
 }
 
-.star-fountain span:nth-child(1) { left: 8%; }
-.star-fountain span:nth-child(2) { left: 28%; animation-delay: 0.08s; }
-.star-fountain span:nth-child(3) { left: 48%; animation-delay: 0.04s; }
-.star-fountain span:nth-child(4) { left: 66%; animation-delay: 0.12s; }
-.star-fountain span:nth-child(5) { left: 84%; animation-delay: 0.06s; }
+.star-fountain span:nth-child(1) { left: 4%; }
+.star-fountain span:nth-child(2) { left: 16%; animation-delay: 0.06s; background: #7ec8ff; }
+.star-fountain span:nth-child(3) { left: 28%; animation-delay: 0.02s; }
+.star-fountain span:nth-child(4) { left: 40%; animation-delay: 0.1s; background: #ff8ad4; }
+.star-fountain span:nth-child(5) { left: 52%; animation-delay: 0.04s; }
+.star-fountain span:nth-child(6) { left: 64%; animation-delay: 0.12s; background: #fff; }
+.star-fountain span:nth-child(7) { left: 76%; animation-delay: 0.08s; background: #b794f6; }
+.star-fountain span:nth-child(8) { left: 88%; animation-delay: 0.14s; }
+.star-fountain span:nth-child(9) { left: 46%; bottom: 18%; animation-delay: 0.18s; width: 26px; height: 26px; }
 
 @keyframes sky-burst {
   0% {
@@ -1700,7 +1711,7 @@
   .wheel-twinkle span::before,
   .spin-button span::after,
   .wheel-stage.is-hit,
-  .wheel-stage.is-hit::after,
+  .wheel-stage.is-live::before,
   .modal-backdrop::before,
   .ambient-sparkles span.is-star,
   .question-sparkles.is-burst span,

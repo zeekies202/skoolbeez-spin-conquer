@@ -226,9 +226,9 @@ img {
 .question-rotor {
   position: absolute;
   z-index: 2;
-  left: 29.73%;
-  top: 31.00%;
-  width: 40.15%;
+  left: 29.66%;
+  top: 29.70%;
+  width: 40.58%;
   aspect-ratio: 1;
   overflow: hidden;
   pointer-events: none;
@@ -412,9 +412,11 @@ img {
   display: grid;
   place-items: center;
   padding: 1rem;
-  background: rgba(4, 8, 20, 0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(92, 48, 150, 0.28), transparent 52%),
+    rgba(6, 10, 28, 0.58);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .modal-card {

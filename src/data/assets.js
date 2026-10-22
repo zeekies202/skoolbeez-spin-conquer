@@ -6,7 +6,7 @@ export const assets = {
   spinLogo: '/images/ui/spin-conquer-logo.webp',
   progressPanel: '/images/ui/spin-conquer-progress-panel.webp',
   wheelStand: '/images/wheel/question-wheel-stands.webp',
-  questionStand: '/images/wheel/question-wheel-numbersss%20stands.webp',
+  questionStand: '/images/wheel/question-wheel-numbersss%20standsss.webp',
   wheelSubjects: '/images/wheel/question-wheel-subjectsss.webp',
   questionNumbers: '/images/wheel/question-wheel-numbersss.webp',
   victorySound: null,

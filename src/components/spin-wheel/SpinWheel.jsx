@@ -7,12 +7,14 @@ import { useWheelDisc, useWheelStand } from '../../hooks/useWheelStand'
 import CutoutImage from '../layout/CutoutImage'
 
 const partyBits = [
-  ['#ffe08a', '6%', '0s'],
-  ['#7ec8ff', '11%', '0.06s'],
-  ['#ff8ad4', '15%', '0.12s'],
-  ['#b794f6', '9%', '0.04s'],
-  ['#8affc1', '13%', '0.1s'],
-  ['#fff6c8', '7%', '0.16s'],
+  ['#ffe08a', '4%', '0s'],
+  ['#7ec8ff', '9%', '0.05s'],
+  ['#ff8ad4', '14%', '0.1s'],
+  ['#b794f6', '7%', '0.02s'],
+  ['#8affc1', '12%', '0.08s'],
+  ['#fff6c8', '5%', '0.14s'],
+  ['#ffd056', '16%', '0.16s'],
+  ['#fff', '10%', '0.2s'],
 ]
 
 function QuestionDisc({
@@ -76,6 +78,7 @@ export default function SpinWheel({
   onQuestionSpinEnd,
 }) {
   const standUrl = useWheelStand(assets.wheelStand)
+  const questionStandUrl = useWheelStand(assets.questionStand)
   const subjectUrl = useWheelDisc(assets.wheelSubjects)
   const showQuestions = Boolean(subject) && questions.length > 0
   const [impact, setImpact] = useState(false)
@@ -138,12 +141,14 @@ export default function SpinWheel({
         {standUrl ? (
           <img className="wheel-stand is-subject" src={standUrl} alt="" draggable="false" />
         ) : null}
-        <img
-          className="wheel-stand is-question"
-          src={assets.questionStand}
-          alt=""
-          draggable="false"
-        />
+        {questionStandUrl ? (
+          <img
+            className="wheel-stand is-question"
+            src={questionStandUrl}
+            alt=""
+            draggable="false"
+          />
+        ) : null}
         {impact ? (
           <div className="party-cannon" aria-hidden="true">
             {partyBits.map(([color, edge, delay]) => (
@@ -156,6 +161,10 @@ export default function SpinWheel({
         ) : null}
         {impact ? (
           <div className="star-fountain" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <span />
             <span />
             <span />
             <span />
