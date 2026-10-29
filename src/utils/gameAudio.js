@@ -1,6 +1,7 @@
 const MUSIC_VOLUME = 0.14
 const SFX_VOLUME = 0.85
 const SELECTION_HOLD_MS = 1400
+const MUSIC_URL = '/audio/8-Bit%20Background%20Music%20Free%20Game%20Song.mp3'
 
 const listeners = new Set()
 let context = null
@@ -16,6 +17,7 @@ let muted = false
 let unlocked = false
 let armed = false
 let musicBuffer = null
+let musicLoading = null
 let musicHeld = false
 let musicStarts = 0
 let releaseTimer = 0
@@ -73,60 +75,24 @@ function resumeContext() {
   return ctx
 }
 
-function writePulse(data, rate, start, duration, frequency, peak) {
-  const from = Math.max(0, Math.floor(start * rate))
-  const to = Math.min(data.length, Math.floor((start + duration) * rate))
-  for (let index = from; index < to; index += 1) {
-    const time = (index - from) / rate
-    const attack = Math.min(1, time / 0.005)
-    const release = Math.min(1, Math.max(0, duration - time) / 0.028)
-    const cycle = (frequency * time) % 1
-    const pulse = cycle < 0.3 ? 1 : -1
-    data[index] += pulse * attack * release * peak
-  }
-}
-
-function writeBass(data, rate, start, duration, frequency, peak) {
-  const from = Math.max(0, Math.floor(start * rate))
-  const to = Math.min(data.length, Math.floor((start + duration) * rate))
-  for (let index = from; index < to; index += 1) {
-    const time = (index - from) / rate
-    const envelope = Math.min(1, time / 0.015) * Math.exp(-time * 2.4)
-    const cycle = (frequency * time) % 1
-    const triangle = cycle < 0.5 ? cycle * 4 - 1 : 3 - cycle * 4
-    data[index] += triangle * envelope * peak
-  }
-}
-
-function createMusicBuffer(ctx) {
-  const rate = ctx.sampleRate
-  const seconds = 8
-  const data = new Float32Array(Math.floor(rate * seconds))
-  const step = 0.25
-  const melody = [
-    659.25, 783.99, 1046.5, 783.99, 659.25, 587.33, 523.25, 659.25,
-    698.46, 880, 1174.66, 880, 783.99, 659.25, 587.33, 523.25,
-    659.25, 783.99, 1046.5, 1318.51, 1046.5, 783.99, 659.25, 523.25,
-    587.33, 659.25, 783.99, 659.25, 523.25, 493.88, 440, 523.25,
-  ]
-  melody.forEach((frequency, index) => {
-    const long = index % 8 === 3 || index % 8 === 7
-    writePulse(data, rate, index * step, long ? 0.34 : 0.18, frequency, long ? 0.055 : 0.046)
-  })
-  const bass = [130.81, 98, 110, 87.31, 130.81, 98, 116.54, 82.41]
-  bass.forEach((frequency, index) => {
-    writeBass(data, rate, index, 0.42, frequency, 0.07)
-    writeBass(data, rate, index + 0.5, 0.28, frequency * 2, 0.028)
-  })
-  const fade = Math.floor(rate * 0.02)
-  for (let index = 0; index < fade; index += 1) {
-    const gain = index / fade
-    data[index] *= gain
-    data[data.length - 1 - index] *= gain
-  }
-  const buffer = ctx.createBuffer(1, data.length, rate)
-  buffer.copyToChannel(data, 0)
-  return buffer
+function loadMusicBuffer(ctx) {
+  if (musicBuffer) return Promise.resolve(musicBuffer)
+  if (musicLoading) return musicLoading
+  musicLoading = fetch(MUSIC_URL)
+    .then((response) => {
+      if (!response.ok) throw new Error('music')
+      return response.arrayBuffer()
+    })
+    .then((bytes) => ctx.decodeAudioData(bytes))
+    .then((buffer) => {
+      musicBuffer = buffer
+      return buffer
+    })
+    .catch(() => {
+      musicLoading = null
+      return null
+    })
+  return musicLoading
 }
 
 function createTekBuffer(ctx) {
@@ -155,17 +121,19 @@ function playBuffer(buffer) {
 export function startMusic() {
   const ctx = resumeContext()
   if (!ctx || muted || musicSource || !unlocked) return
-  if (!musicBuffer) musicBuffer = createMusicBuffer(ctx)
-  const source = ctx.createBufferSource()
-  source.buffer = musicBuffer
-  source.loop = true
-  source.connect(musicGain)
-  source.start()
-  musicStarts += 1
-  musicSource = source
-  source.onended = () => {
-    if (musicSource === source) musicSource = null
-  }
+  loadMusicBuffer(ctx).then((buffer) => {
+    if (!buffer || muted || musicSource || !unlocked || !musicGain) return
+    const source = ctx.createBufferSource()
+    source.buffer = buffer
+    source.loop = true
+    source.connect(musicGain)
+    source.start()
+    musicStarts += 1
+    musicSource = source
+    source.onended = () => {
+      if (musicSource === source) musicSource = null
+    }
+  })
 }
 
 export function pauseMusic() {

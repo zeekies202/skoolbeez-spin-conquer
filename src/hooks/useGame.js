@@ -48,6 +48,7 @@ export function useGame() {
   const portalTimer = useRef(0)
   const answerLock = useRef(false)
   const answerLockTimer = useRef(0)
+  const lastSubjectId = useRef(null)
 
   function rememberSubject(subject) {
     lockedSubjectRef.current = subject
@@ -67,14 +68,19 @@ export function useGame() {
 
   function spin() {
     if (spinningRef.current || phase !== 'idle') return
-    const choices = availableSubjects(answeredRef.current)
+    let choices = availableSubjects(answeredRef.current)
     if (choices.length === 0) {
       setPhase('results')
       setShowResults(true)
       if (scoreRef.current >= 15) playFanfare()
       return
     }
+    if (choices.length > 1 && lastSubjectId.current) {
+      const others = choices.filter((subject) => subject.id !== lastSubjectId.current)
+      if (others.length > 0) choices = others
+    }
     const subject = choices[Math.floor(Math.random() * choices.length)]
+    lastSubjectId.current = subject.id
     pendingSubjectId.current = subject.id
     pendingQuestion.current = null
     spinKind.current = 'subject'
@@ -279,6 +285,7 @@ export function useGame() {
     spinningRef.current = false
     pendingSubjectId.current = null
     pendingQuestion.current = null
+    lastSubjectId.current = null
     spinKind.current = 'subject'
     questionRotationRef.current = 0
     questionSpinningRef.current = false

@@ -2,7 +2,7 @@
 export const timings = {
   spinSeconds: 6,
   questionSpinSeconds: 6,
-  feedbackSeconds: 1.8,
+  feedbackSeconds: 3.5,
   spinMin: 8,
   spinMax: 12,
   pauseAfterStop: 1,
