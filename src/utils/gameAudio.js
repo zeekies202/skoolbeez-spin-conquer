@@ -1,6 +1,5 @@
 const MUSIC_VOLUME = 0.14
 const SFX_VOLUME = 0.85
-const SELECTION_HOLD_MS = 1400
 const MUSIC_URL = '/audio/8-Bit%20Background%20Music%20Free%20Game%20Song.mp3'
 
 const listeners = new Set()
@@ -18,9 +17,7 @@ let unlocked = false
 let armed = false
 let musicBuffer = null
 let musicLoading = null
-let musicHeld = false
 let musicStarts = 0
-let releaseTimer = 0
 let lastCue = ''
 
 function emit() {
@@ -42,7 +39,6 @@ export function getAudioStatus() {
     context: context ? context.state : 'none',
     spinning: spinActive,
     music: Boolean(musicSource),
-    musicHeld,
     musicStarts,
     musicVolume: MUSIC_VOLUME,
     sfxVolume: SFX_VOLUME,
@@ -156,30 +152,6 @@ function setMusicLevel(level, seconds = 0.08) {
   musicGain.gain.linearRampToValueAtTime(muted ? 0 : level, now + seconds)
 }
 
-function selectionHold() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 200
-  return SELECTION_HOLD_MS
-}
-
-function holdMusic() {
-  window.clearTimeout(releaseTimer)
-  releaseTimer = 0
-  musicHeld = true
-  setMusicLevel(0, 0.04)
-}
-
-function releaseMusic(delay = 0) {
-  window.clearTimeout(releaseTimer)
-  const finish = () => {
-    releaseTimer = 0
-    musicHeld = false
-    if (spinActive || muted) return
-    setMusicLevel(MUSIC_VOLUME, 0.28)
-  }
-  if (delay > 0) releaseTimer = window.setTimeout(finish, delay)
-  else finish()
-}
-
 function endSpinSound() {
   spinToken += 1
   spinActive = false
@@ -192,7 +164,6 @@ export function startSpin(seconds = 6) {
   const ctx = resumeContext()
   if (!ctx || !unlocked) return
   if (!tekBuffer) tekBuffer = createTekBuffer(ctx)
-  holdMusic()
   const token = spinToken
   const started = performance.now()
   const total = Math.max(1, seconds) * 1000
@@ -203,7 +174,6 @@ export function startSpin(seconds = 6) {
     const elapsed = performance.now() - started
     if (elapsed >= total) {
       endSpinSound()
-      releaseMusic(selectionHold())
       return
     }
     playBuffer(tekBuffer)
@@ -221,17 +191,14 @@ export function playWheelStop() {
     playTone(1174.66, 0, 0.2, 'sine', 0.15)
     playTone(1567.98, 0.045, 0.26, 'triangle', 0.09)
   }
-  releaseMusic(selectionHold())
 }
 
 export function stopSpin() {
-  const restore = spinActive || musicHeld
   endSpinSound()
-  if (restore) releaseMusic(0)
 }
 
 function duckMusic(seconds) {
-  if (!context || !musicGain || muted || musicHeld || spinActive) return
+  if (!context || !musicGain || muted || spinActive) return
   const now = context.currentTime
   const quietUntil = now + seconds
   musicGain.gain.cancelScheduledValues(now)
@@ -315,9 +282,6 @@ export function setMuted(next) {
     masterGain.gain.setValueAtTime(muted ? 0 : 1, context.currentTime)
   }
   if (muted) {
-    window.clearTimeout(releaseTimer)
-    releaseTimer = 0
-    musicHeld = false
     pauseMusic()
     stopKidVoices()
   } else if (unlocked) {
