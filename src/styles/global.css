@@ -558,14 +558,15 @@ img {
 
 .option.is-correct {
   background: linear-gradient(180deg, #1f9d4a, #0d6b30);
-  border-color: #ffe08a;
-  box-shadow: 0 0 22px rgba(255, 214, 90, 0.85);
+  border-color: #b6ffce;
+  box-shadow: 0 0 18px rgba(70, 210, 120, 0.85);
   animation: answer-win 0.55s ease;
 }
 
 .option.is-wrong {
   background: linear-gradient(180deg, #c43838, #8d1d1d);
   border-color: #ffd0d0;
+  box-shadow: inset 0 0 0 2px rgba(255, 214, 214, 0.55);
   animation: answer-shake 0.42s ease;
   cursor: default;
 }

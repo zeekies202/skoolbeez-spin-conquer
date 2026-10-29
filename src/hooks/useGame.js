@@ -45,6 +45,9 @@ export function useGame() {
   const questionSpinningRef = useRef(false)
   const questionSpinStarted = useRef(0)
   const returnTimer = useRef(0)
+  const portalTimer = useRef(0)
+  const answerLock = useRef(false)
+  const answerLockTimer = useRef(0)
 
   function rememberSubject(subject) {
     lockedSubjectRef.current = subject
@@ -150,6 +153,7 @@ export function useGame() {
     setSelectedIndex(null)
     setWrongIndexes([])
     setConfirmed(false)
+    answerLock.current = false
     setActiveQuestion(withShuffledOptions(question))
     setPhase('question')
   }
@@ -166,18 +170,35 @@ export function useGame() {
       setPhase('idle')
       return
     }
-    rememberSubject(subject)
-    setRevealSubject(subject)
-    setCelebrate(true)
-    setPhase('subject')
     playVictorySound(assets.victorySound)
+    const session = sessionRef.current
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const revealNumberWheel = () => {
+      if (sessionRef.current !== session) return
+      rememberSubject(subject)
+      setRevealSubject(subject)
+      setCelebrate(true)
+      setPhase('subject')
+    }
+    if (reduced) {
+      revealNumberWheel()
+      return
+    }
+    setPhase('portal')
+    window.clearTimeout(portalTimer.current)
+    portalTimer.current = window.setTimeout(revealNumberWheel, 1150)
   }
 
   function selectAnswer(index) {
-    if (!activeQuestion || confirmed || wrongIndexes.includes(index)) return
+    if (!activeQuestion || confirmed || wrongIndexes.includes(index) || answerLock.current) return
     setSelectedIndex(index)
     if (index !== activeQuestion.correctIndex) {
       setWrongIndexes((current) => (current.includes(index) ? current : [...current, index]))
+      answerLock.current = true
+      window.clearTimeout(answerLockTimer.current)
+      answerLockTimer.current = window.setTimeout(() => {
+        answerLock.current = false
+      }, 420)
       playWrong()
       return
     }
@@ -231,6 +252,8 @@ export function useGame() {
   function backFromQuestion() {
     if (!activeQuestion || confirmed || spinningRef.current) return
     window.clearTimeout(returnTimer.current)
+    window.clearTimeout(answerLockTimer.current)
+    answerLock.current = false
     pendingQuestion.current = null
     setActiveQuestion(null)
     setSelectedIndex(null)
@@ -249,6 +272,9 @@ export function useGame() {
   function resetSession() {
     sessionRef.current += 1
     window.clearTimeout(returnTimer.current)
+    window.clearTimeout(portalTimer.current)
+    window.clearTimeout(answerLockTimer.current)
+    answerLock.current = false
     stopSpin()
     spinningRef.current = false
     pendingSubjectId.current = null

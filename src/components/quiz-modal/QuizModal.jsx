@@ -65,7 +65,7 @@ export default function QuizModal({
           <span />
         </div>
       )}
-      {(correct && confirmed) || (showResults && score >= 10) ? (
+      {(correct && confirmed) || showResults ? (
         <div className="confetti" aria-hidden="true">
           {['#ffe08a', '#7a3ff0', '#1d6fe8', '#ffd56a', '#f0c14a', '#9b6bff', '#7ec8ff', '#fff1b0', '#ff8ad4', '#8affc1', '#fff', '#ffb347'].map(
             (color, index) => (
@@ -99,6 +99,18 @@ export default function QuizModal({
       >
         {showResults ? (
           <div className="results">
+            <div className="victory-trophy" aria-hidden="true">
+              <svg viewBox="0 0 64 64">
+                <path d="M18 10h28v8c0 10-6 18-14 20-8-2-14-10-14-20V10z" />
+                <path d="M18 14H10c0 10 4 16 10 18M46 14h8c0 10-4 16-10 18" />
+                <path d="M28 38h8v8h-8zM22 50h20v6H22z" />
+              </svg>
+            </div>
+            <div className="victory-stars" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((index) => (
+                <span key={index} style={{ animationDelay: `${index * 0.16}s` }} />
+              ))}
+            </div>
             <CutoutImage className="results-rewards" src={assets.rewards} mode="white" alt="" />
             <p className="question-kicker">Spin & Conquer</p>
             <h2 id="quiz-heading">{text.resultsTitle}</h2>
@@ -130,6 +142,20 @@ export default function QuizModal({
               confirmed={confirmed}
               onSelect={onSelect}
             />
+            {confirmed && correct ? (
+              <div className="score-float" aria-hidden="true">
+                <strong>+100</strong>
+                {score >= 2 ? <em>COMBO x{score}</em> : null}
+                <span className="correct-sparkles">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              </div>
+            ) : null}
             {confirmed && (
               <p className="cheer-banner is-win">
                 {text.cheerWin}

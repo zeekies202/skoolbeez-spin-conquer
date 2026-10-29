@@ -10,6 +10,22 @@ import SpinWheel from './components/spin-wheel/SpinWheel'
 import { useGame } from './hooks/useGame'
 import { useCopy } from './utils/language'
 
+function HoneyPortal() {
+  return (
+    <div className="honey-portal" aria-hidden="true">
+      <span className="honey-glow" />
+      <span className="honey-ring" />
+      <span className="honey-ring is-mid" />
+      <span className="honey-ring is-inner" />
+      <span className="honey-drop" />
+      <span className="honey-drop" />
+      <span className="honey-drop" />
+      <span className="honey-drop" />
+      <span className="honey-drop" />
+    </div>
+  )
+}
+
 export default function App() {
   const game = useGame()
   const text = useCopy()
@@ -40,8 +56,9 @@ export default function App() {
           <span />
         </div>
       ) : null}
+      {game.phase === 'portal' ? <HoneyPortal /> : null}
       {game.phase === 'question' || game.showResults ? null : (
-        <Buzzy mood={game.spinning ? 'spin' : 'idle'} />
+        <Buzzy mood={game.phase === 'portal' ? 'fly' : game.spinning ? 'spin' : 'idle'} />
       )}
       {game.phase === 'subject' ? (
         <button type="button" className="back-button stage-back" onClick={game.backToSubjects}>
@@ -55,7 +72,7 @@ export default function App() {
           spinDuration={game.spinDuration}
           spinning={game.spinning}
           answeredIds={game.answeredIds}
-          disabled={game.spinning || game.phase === 'question' || game.showResults}
+          disabled={game.spinning || game.phase === 'portal' || game.phase === 'question' || game.showResults}
           onSpin={questionReady ? game.spinQuestion : game.spin}
           onSpinEnd={game.finishSpin}
           buttonLabel={buttonLabel}
