@@ -155,22 +155,6 @@ img {
   opacity: 1;
 }
 
-.segment-spent {
-  position: absolute;
-  left: 18%;
-  top: 18%;
-  width: 64%;
-  height: 64%;
-  border-radius: 50%;
-  background: conic-gradient(
-    from -36deg,
-    rgba(92, 98, 108, 0.72) 0deg 72deg,
-    transparent 72deg
-  );
-  transform: rotate(var(--segment-angle));
-  pointer-events: none;
-}
-
 .wheel-column > .spin-button {
   position: absolute;
   z-index: 6;

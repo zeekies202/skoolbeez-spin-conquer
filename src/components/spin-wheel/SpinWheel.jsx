@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { timings } from '../../data/timings'
 import { assets } from '../../data/assets'
-import { subjects } from '../../data/subjects'
-import { isSubjectComplete } from '../../utils/game'
 import { useWheelDisc, useWheelStand } from '../../hooks/useWheelStand'
 import CutoutImage from '../layout/CutoutImage'
 
@@ -119,15 +117,6 @@ export default function SpinWheel({
           {subjectUrl ? (
             <img src={subjectUrl} alt="Subject spin wheel" draggable="false" />
           ) : null}
-          {subjects.map((item) =>
-            isSubjectComplete(item.id, answeredIds) ? (
-              <span
-                key={item.id}
-                className="segment-spent"
-                style={{ '--segment-angle': `${item.angle}deg` }}
-              />
-            ) : null,
-          )}
         </div>
         {showQuestions ? (
           <QuestionDisc
